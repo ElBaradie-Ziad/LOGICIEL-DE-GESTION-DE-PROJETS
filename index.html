@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProjeXpert – Connexion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <div class="login-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="48" height="48" rx="12" fill="var(--primary)"/>
+          <path d="M12 24L20 32L36 16" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="36" cy="14" r="3" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <h1 class="brand-name">ProjeXpert</h1>
+      <p class="brand-tagline">Gestion de projets collaborative</p>
+    </div>
+
+    <div class="login-card">
+      <h2>Connexion</h2>
+      <p class="login-subtitle">Bienvenue ! Connectez-vous à votre espace.</p>
+
+      <div id="login-error" class="alert alert-error hidden"></div>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="email">Adresse e-mail</label>
+          <input type="email" id="email" placeholder="exemple@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" placeholder="••••••••" required />
+            <button type="button" class="toggle-password" onclick="togglePassword()">
+              <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="remember" />
+            <span>Se souvenir de moi</span>
+          </label>
+          <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Se connecter</button>
+      </form>
+
+      <div class="login-divider"><span>Comptes de démonstration</span></div>
+
+      <div class="demo-accounts">
+        <button class="demo-btn" onclick="loginAs('admin')">
+          <span class="demo-role admin">Admin</span>
+          <span class="demo-info">admin@projexpert.fr / admin123</span>
+        </button>
+        <button class="demo-btn" onclick="loginAs('manager')">
+          <span class="demo-role manager">Manager</span>
+          <span class="demo-info">manager@projexpert.fr / manager123</span>
+        </button>
+        <button class="demo-btn" onclick="loginAs('member')">
+          <span class="demo-role member">Membre</span>
+          <span class="demo-info">membre@projexpert.fr / membre123</span>
+        </button>
+      </div>
+    </div>
+
+    <p class="login-footer">© 2024 ProjeXpert – Tous droits réservés</p>
+  </div>
+
+  <div class="login-illustration">
+    <div class="illustration-content">
+      <h2>Travaillez ensemble,<br/>réussissez ensemble.</h2>
+      <p>Planifiez, collaborez et suivez vos projets en temps réel avec votre équipe.</p>
+      <div class="feature-chips">
+        <span class="chip">📋 Kanban</span>
+        <span class="chip">📅 Calendrier</span>
+        <span class="chip">📊 Analytics</span>
+        <span class="chip">💬 Messagerie</span>
+        <span class="chip">🔔 Notifications</span>
+        <span class="chip">👥 Équipe</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    function togglePassword() {
+      const input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function loginAs(role) {
+      const credentials = {
+        admin: { email: 'admin@projexpert.fr', password: 'admin123' },
+        manager: { email: 'manager@projexpert.fr', password: 'manager123' },
+        member: { email: 'membre@projexpert.fr', password: 'membre123' }
+      };
+      document.getElementById('email').value = credentials[role].email;
+      document.getElementById('password').value = credentials[role].password;
+      document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const result = Auth.login(email, password);
+      if (result.success) {
+        window.location.href = 'app.html';
+      } else {
+        const err = document.getElementById('login-error');
+        err.textContent = result.message;
+        err.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
